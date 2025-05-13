@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>罰金計算機</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    button { margin: 5px; padding: 10px 20px; }
+    #result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #f0f0f0; }
+    #options { margin-top: 10px; }
+    .item-row { margin-bottom: 5px; }
+    .item-row input[type="number"] { width: 60px; margin-left: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>罰金計算機</h1>
+
+<button onclick="selectCrime('コンビニ強盗')">コンビニ強盗</button>
+
+<div id="options" style="display: none;">
+  <p>追加罪状を選んでください：</p>
+  <label><input type="checkbox" id="kidnapping, abduction ,confinement"> 誘拐・拉致・監禁罪（10万・10分）</label><br><br>
+  <label><input type="checkbox" id="theft"> 軽窃盗罪（10万・10分）</label><br>
+  <label><input type="checkbox" id="noId"> ID・ライセンス不携帯（10万・なし）</label><br>
+  <label><input type="checkbox" id="assault"> 暴行罪（10万・10分）</label><br>
+  <label><input type="checkbox" id="attemptedMurder"> 殺人未遂（50万・15分）</label><br>
+  <label><input type="checkbox" id="playerMurder"> プレイヤー殺人（100万・30分）</label><br>
+  <label><input type="checkbox" id="bailOption"> 保釈金支払い（罰金の2倍を支払う）</label><br><br>
+
+  <div class="item-row">
+    <label><input type="checkbox" id="illegalRawDrug" onchange="toggleInput('rawDrugCount')"> 違法薬物原材料所持（1個 1万・固定20分）※100個まで</label>
+    <input type="number" id="rawDrugCount" min="0" style="display:none">
+  </div>
+
+  <div class="item-row">
+    <label><input type="checkbox" id="drug" onchange="toggleInput('drugCount')"> 違法薬物所持（1個 2万・固定20分）※100個まで</label>
+    <input type="number" id="drugCount" min="0" style="display:none">
+  </div>
+
+  <label><input type="checkbox" id="illegalDrugFlat"> 違法薬物所持（20万・20分）</label><br>
+
+  <button onclick="calculateFine()">計算する</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+  let baseCrime = null;
+  let crimeName = '';
+
+  const crimes = {
+    'コンビニ強盗': {
+      fine: 60,
+      time: 20,
+      charges: [
+        '軽強盗罪',
+        '公務執行妨害',
+        '銃刀法違反',
+        'NPC殺人罪',
+      ]
+    }
+  };
+
+  function toggleInput(inputId) {
+    const input = document.getElementById(inputId);
+    input.style.display = input.style.display === 'none' ? 'inline-block' : 'none';
+    if (input.style.display === 'inline-block') input.value = '0';
+  }
+
+  function selectCrime(name) {
+    const optionsDiv = document.getElementById('options');
+
+    if (crimeName === name && optionsDiv.style.display === 'block') {
+      optionsDiv.style.display = 'none';
+      document.getElementById('result').innerHTML = '';
+      crimeName = '';
+      baseCrime = null;
+      return;
+    }
+
+    baseCrime = crimes[name];
+    crimeName = name;
+    optionsDiv.style.display = 'block';
+    document.getElementById('result').innerHTML = '';
+
+    document.querySelectorAll('#options input[type="checkbox"]').forEach(el => el.checked = false);
+    document.querySelectorAll('#options input[type="number"]').forEach(el => {
+      el.style.display = 'none';
+      el.value = '';
+    });
+  }
+
+  function calculateFine() {
+    if (!baseCrime) return;
+
+    let totalFine = baseCrime.fine;
+    let totalTime = baseCrime.time;
+    let allCharges = [...baseCrime.charges];
+
+    if (document.getElementById('theft').checked) {
+      totalFine += 10;
+      totalTime += 10;
+      allCharges.push('軽窃盗罪');
+    }
+
+    if (document.getElementById('noId').checked) {
+      totalFine += 10;
+      allCharges.push('ID・ライセンス不携帯');
+    }
+
+    if (document.getElementById('assault').checked) {
+      totalFine += 10;
+      totalTime += 10;
+      allCharges.push('暴行罪');
+    }
+
+    if (document.getElementById('attemptedMurder').checked) {
+      totalFine += 50;
+      totalTime += 15;
+      allCharges.push('殺人未遂');
+    }
+
+    if (document.getElementById('playerMurder').checked) {
+      totalFine += 100;
+      totalTime += 30;
+      allCharges.push('プレイヤー殺人');
+    }
+
+    if (document.getElementById('kidnapping, abduction ,confinement').checked) {
+      totalFine += 10;
+      totalTime += 10;
+      allCharges.push('誘拐・拉致・監禁罪');
+　　}
+    const rawDrug = parseInt(document.getElementById('rawDrugCount').value) || 0;
+    const drug = parseInt(document.getElementById('drugCount').value) || 0;
+
+    if (rawDrug > 0) {
+      totalFine += rawDrug * 1;
+      totalTime += 20;
+      allCharges.push(`違法薬物原材料所持 ×${rawDrug}`);
+    }
+
+    if (drug > 0) {
+      totalFine += drug * 2;
+      totalTime += 20;
+      allCharges.push(`違法薬物所持（単価） ×${drug}`);
+    }
+
+    if (document.getElementById('illegalDrugFlat').checked) {
+      totalFine += 20;
+      totalTime += 20;
+      allCharges.push('違法薬物所持');
+    }
+
+    let bailText = '';
+    if (document.getElementById('bailOption').checked) {
+      const bailAmount = totalFine * 2;
+      bailText = `<br>保釈金: ${bailAmount}万円（罰金の2倍）`;
+      allCharges.push('保釈希望');
+    }
+
+    const html = `
+      <strong>${crimeName}</strong><br>
+      罰金額: ${totalFine}万円<br>
+      刑務時間: ${totalTime}分<br>
+      含まれる罪状: ${allCharges.join('、')}${bailText}
+    `;
+    document.getElementById('result').innerHTML = html;
+  }
+</script>
+
+</body>
+</html>
