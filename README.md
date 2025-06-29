@@ -44,24 +44,23 @@
   <fieldset>
     <legend>軽犯罪</legend>
     <label><input type="checkbox" id="gunLaw"> 銃刀法違反（10万・10分）</label><br>
-    <label><input type="checkbox" id="theft"> 軽窃盗罪（10万・10分）</label><br>
+    <label><input type="checkbox" id="theft"> 軽窃盗罪（30万・10分）</label><br>
     <label><input type="checkbox" id="pettyRobberyAttempt"> 軽強盗未遂（15万・なし）</label><br>
     <label><input type="checkbox" id="pettyRobbery"> 軽強盗罪（30万・なし）</label><br>
-    <label><input type="checkbox" id="fraud"> 詐欺罪</label><br>
-
+    <label><input type="checkbox" id="fraud"> 詐欺罪用（5～50万・10分）</label><br>
     <div id="fraudCountContainer" class="input-box" style="display: none;">
       詐欺罰金額※5～50万まで:
       <input type="number" id="fraudCount" value="5" min="5" max="50" step="1">
     </div>
     <label><input type="checkbox" id="obstructionOfficialDuties"> 公務執行妨害※逃亡・職務質問放棄含む（10万・10分）</label><br>
-    <label><input type="checkbox" id="assault"> 暴行罪（10万・10分）</label><br>
+    <label><input type="checkbox" id="assault"> 暴行罪（20万・10分）</label><br>
     <label><input type="checkbox" id="noId"> ID・ライセンス不携帯（10万・なし）</label><br>
   </fieldset>
 
   <!-- 重犯罪 -->
   <fieldset>
     <legend>重犯罪</legend>
-    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪（50万・30分）</label><br>
+    <label><input type="checkbox" id="aggravatedTheft"> 重窃盗罪（100万・30分）</label><br>
     <label><input type="checkbox" id="aggravatedRobberyAttempt"> 準重強盗未遂（50万・なし）</label><br>
     <label><input type="checkbox" id="aggravatedRobbery"> 準重強盗罪（100万・なし）</label><br>
     <label><input type="checkbox" id="armedRobberyAttempt"> 重強盗未遂（100万・なし）</label><br>
@@ -308,7 +307,7 @@ function calculateFine() {
     selectedCharges.push("銃刀法違反");
   }
   if (document.getElementById("theft").checked) {
-    fine += 100000;
+    fine += 300000;
     if ( isManual ) time += 10;
     selectedCharges.push("軽窃盗罪");
   }
@@ -331,7 +330,7 @@ function calculateFine() {
     selectedCharges.push("公務執行妨害");
   }
   if (document.getElementById("assault").checked) {
-    fine += 100000;
+    fine += 200000;
     if (isManual) time += 10;
     selectedCharges.push("暴行罪");
   }
@@ -342,7 +341,7 @@ function calculateFine() {
 
   // 重犯罪
   const heavyCrimes = [
-    { id: "aggravatedTheft", fine: 500000, time: 30, label: "重窃盗罪" },
+    { id: "aggravatedTheft", fine: 1000000, time: 30, label: "重窃盗罪" },
     { id: "aggravatedRobberyAttempt", fine: 500000, time: 0, label: "準重強盗未遂" },
     { id: "aggravatedRobbery", fine: 1000000, time: 0, label: "準重強盗罪" },
     { id: "armedRobberyAttempt", fine: 1000000, time: 0, label: "重強盗未遂" },
