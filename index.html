@@ -18,13 +18,15 @@
 <h1>罰金計算機</h1>
 
 <!-- 犯罪選択ボタン -->
-<button onclick="selectCrime('コンビニ強盗', this)">コンビニ強盗</button>
 <button onclick="selectCrime('家強盗', this)">家強盗</button>
+<button onclick="selectCrime('ATM強盗', this)">ATM強盗</button>
+<button onclick="selectCrime('コンビニ強盗', this)">コンビニ強盗</button>
 <button onclick="selectCrime('フリーカ銀行強盗', this)">フリーカ銀行強盗</button>
 <button onclick="selectCrime('宝石強盗', this)">宝石強盗</button>
 <button onclick="selectCrime('軍事物資強盗', this)">軍事物資強盗</button>
 <button onclick="selectCrime('パレト銀行強盗', this)">パレト銀行強盗</button>
 <button onclick="selectCrime('客船強盗', this)">客船強盗</button>
+<button onclick="selectCrime('ボブキャット', this)">ボブキャット</button>
 <button onclick="selectCrime('飛行場襲撃', this)">飛行場襲撃</button>
 <button onclick="selectCrime('アーティファクト強盗', this)">アーティファクト強盗</button>
 <button onclick="selectCrime('パシフィック銀行強盗', this)">パシフィック銀行強盗</button>
@@ -105,13 +107,15 @@
 let selectedCrime = null;
 
 const crimeMappings = {
-  "コンビニ強盗": ["pettyRobbery", "gunLaw","obstructionOfficialDuties","kidnap","npcMurder"],
   "家強盗": ["pettyRobbery","gunLaw","obstructionOfficialDuties"],
+  "ATM強盗": ["pettyRobbery","gunLaw","obstructionOfficialDuties"],
+  "コンビニ強盗": ["pettyRobbery", "gunLaw","obstructionOfficialDuties","kidnap","npcMurder"],
   "フリーカ銀行強盗": ["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
   "宝石強盗": ["aggravatedRobbery","gunLaw","obstructionOfficialDuties","kidnap"],
   "軍事物資強盗": ["aggravatedRobbery", "gunLaw","obstructionOfficialDuties","npcMurder"],
   "パレト銀行強盗": ["armedRobbery","gunLaw","obstructionOfficialDuties","playerMurder"],
   "客船強盗": ["armedRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
+  "ボブキャット":["armedRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
   "飛行場襲撃": ["firstDegreeRobbery", "gunLaw","npcMurder","obstructionOfficialDuties","playerMurder"],
   "アーティファクト強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","npcMurder","playerMurder"],
   "パシフィック銀行強盗": ["firstDegreeRobbery", "gunLaw","obstructionOfficialDuties","playerMurder"],
@@ -120,13 +124,15 @@ const crimeMappings = {
 
 
 const fixedTimeByCrime = {
-  "コンビニ強盗": 20,
   "家強盗": 20,
+  "ATM強盗": 20,
+  "コンビニ強盗": 20,
   "フリーカ銀行強盗": 30,
   "宝石強盗": 30,
   "軍事物資強盗": 30,
   "パレト銀行強盗": 40,
-  "客船強盗": 40,
+  "客船強盗":40,
+  "ボブキャット":40,
   "飛行場襲撃": 60,
   "アーティファクト強盗": 60,
   "パシフィック銀行強盗": 60,
